@@ -1,0 +1,15 @@
+{
+  "name": "the-trail-nt",
+  "version": "1.0.0",
+  "private": true,
+  "main": "expo-router/entry",
+  "scripts": {
+    "setup": "sh ./scripts/setup.sh",
+    "start": "expo start",
+    "ios": "expo start --ios",
+    "android": "expo start --android",
+    "web": "expo start --web",
+    "typecheck": "tsc --noEmit",
+    "admin": "npx --yes serve admin -l 5050"
+  }
+}

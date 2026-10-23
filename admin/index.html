@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Trail Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=IBM+Plex+Sans+Condensed:wght@500;600&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<style>
+:root{
+  --bg:#f3f1ec; --surface:#fbfaf7; --ink:#1f2a24; --muted:#5d6a62; --line:#d9d6cc;
+  --pine:#2f5a45; --pine-soft:#dfe9e2; --blaze:#c98a1b; --danger:#a3402f;
+  --display:"Young Serif",Georgia,serif; --body:"Literata",Georgia,serif;
+  --ui:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#141a17; --surface:#1b2420; --ink:#e6ebe7; --muted:#9aa89f; --line:#2e3a34;
+  --pine:#7fb79a; --pine-soft:#22322a; --blaze:#e3a63f; --danger:#e08572; color-scheme:dark}}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--ui);font-size:15px}
+h1,h2{font-family:var(--display);font-weight:400;margin:0}
+button{font:600 14px var(--ui);letter-spacing:.02em;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 16px;cursor:pointer}
+button:hover{border-color:var(--pine)}
+button.primary{background:var(--pine);border-color:var(--pine);color:var(--bg)}
+button.danger{color:var(--danger)}
+button:disabled{opacity:.45;cursor:default}
+:focus-visible{outline:2px solid var(--blaze);outline-offset:2px}
+input,textarea{width:100%;font:16px var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+textarea{resize:vertical;line-height:1.55}
+label{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+label small{text-transform:none;letter-spacing:0;font-weight:500}
+.wrap{max-width:1180px;margin:0 auto;padding:18px max(16px,env(safe-area-inset-right))}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+header h1{font-size:22px} header h1 span{color:var(--pine)}
+.tabs{display:flex;gap:6px}
+.tabs button[aria-current="page"]{background:var(--pine-soft);border-color:var(--pine);color:var(--pine)}
+.grid{display:grid;grid-template-columns:280px 1fr;gap:20px;align-items:start}
+@media (max-width:820px){.grid{grid-template-columns:1fr}}
+.list{background:var(--surface);border:1px solid var(--line);border-radius:14px;max-height:calc(100vh - 120px);overflow:auto}
+.list .filter{position:sticky;top:0;background:var(--surface);padding:10px;border-bottom:1px solid var(--line);display:flex;gap:6px;flex-wrap:wrap}
+.list .filter button{padding:5px 10px;font-size:12px}
+.list .filter button[aria-pressed="true"]{background:var(--pine-soft);color:var(--pine);border-color:var(--pine)}
+.day{display:flex;gap:10px;align-items:center;width:100%;text-align:left;border:none;border-bottom:1px solid var(--line);border-radius:0;background:none;padding:10px 12px;font-weight:500}
+.day .n{min-width:52px;color:var(--muted);font-variant-numeric:tabular-nums}
+.day .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:var(--body);font-size:14px}
+.day.sel{background:var(--pine-soft)}
+.dot{width:9px;height:9px;border-radius:50%;flex:none;border:1.5px solid var(--muted)}
+.dot.published{background:var(--pine);border-color:var(--pine)}
+.dot.draft.has{background:var(--blaze);border-color:var(--blaze)}
+.editor{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.edhead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.edhead h2{font-size:28px;color:var(--pine)}
+.pill{font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:999px;border:1px solid}
+.pill.published{color:var(--pine);border-color:var(--pine)}
+.pill.draft{color:var(--blaze);border-color:var(--blaze)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px} @media (max-width:560px){.two{grid-template-columns:1fr}}
+.audio{border:1px dashed var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.audio audio{width:100%}
+.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;position:sticky;bottom:0;background:var(--surface);padding-top:10px;border-top:1px solid var(--line)}
+.msg{color:var(--muted);font-size:14px}
+.msg.err{color:var(--danger)}
+.login{max-width:380px;margin:12vh auto;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:14px}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.q p{font-family:var(--body);font-size:16px;margin:0;white-space:pre-wrap}
+.q .meta{color:var(--muted);font-size:13px}
+.qs{display:flex;flex-direction:column;gap:12px;max-width:760px}
+.hint{color:var(--muted);font-size:13px;margin:0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <form id="login" class="login" hidden>
+    <h1>The Trail <span style="color:var(--pine)">Admin</span></h1>
+    <label>Email<input id="email" type="email" autocomplete="username" required></label>
+    <label>Password<input id="password" type="password" autocomplete="current-password" required></label>
+    <button class="primary" type="submit">Sign in</button>
+    <p id="loginMsg" class="msg"></p>
+  </form>
+
+  <div id="app" hidden>
+    <header>
+      <h1>The Trail <span>Admin</span></h1>
+      <nav class="tabs">
+        <button data-tab="days" aria-current="page">Days</button>
+        <button data-tab="questions">Questions <span id="qCount"></span></button>
+        <button id="signOut">Sign out</button>
+      </nav>
+    </header>
+
+    <section id="tab-days" class="grid">
+      <div class="list">
+        <div class="filter" role="group" aria-label="Show">
+          <button data-f="all" aria-pressed="true">All</button>
+          <button data-f="published" aria-pressed="false">Published</button>
+          <button data-f="draft" aria-pressed="false">Drafts</button>
+        </div>
+        <div id="dayList"></div>
+      </div>
+
+      <form id="editor" class="editor">
+        <div class="edhead">
+          <div><span class="hint">Editing</span><h2 id="edTitle">Day 1</h2></div>
+          <span id="edStatus" class="pill draft">Draft</span>
+        </div>
+        <div class="two">
+          <label>Title<input id="f-title" placeholder="The family line"></label>
+          <label>Reading<input id="f-reference" placeholder="Matthew 1:1-17"></label>
+        </div>
+        <label>Bible Gateway search <small>Leave blank to use the reading above</small><input id="f-search" placeholder="Matthew 1:1-17"></label>
+        <label>Centering prayer<textarea id="f-prayer" rows="3"></textarea></label>
+        <label>Commentary <small>Leave a blank line between paragraphs</small><textarea id="f-commentary" rows="14"></textarea></label>
+        <label>Small group questions <small>One question per line</small><textarea id="f-questions" rows="5"></textarea></label>
+
+        <div class="audio">
+          <label style="margin:0">Your recording</label>
+          <audio id="player" controls hidden></audio>
+          <p id="audioInfo" class="hint">No recording yet. Upload an MP3 or M4A file.</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <input id="audioFile" type="file" accept="audio/*" hidden>
+            <button type="button" id="pickAudio">Upload recording</button>
+            <button type="button" id="removeAudio" class="danger" hidden>Remove recording</button>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="button" id="saveDraft">Save draft</button>
+          <button type="button" id="publish" class="primary">Save and publish</button>
+          <button type="button" id="unpublish" hidden>Move back to draft</button>
+          <span id="edMsg" class="msg"></span>
+        </div>
+      </form>
+    </section>
+
+    <section id="tab-questions" hidden>
+      <div style="display:flex;gap:6px;margin-bottom:14px">
+        <button data-q="open" aria-pressed="true" class="qf">Not answered</button>
+        <button data-q="answered" aria-pressed="false" class="qf">Answered</button>
+      </div>
+      <div id="qList" class="qs"></div>
+    </section>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = "https://vfroirrwsxkxebyosdxb.supabase.co";
+const SUPABASE_KEY = "sb_publishable_Yu4IKabwwVHhSA_yNLkbNQ_0bXYbNfQ";
+const BUCKET = "commentary-audio";
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+let days = [], current = 1, filter = "all", dirty = false, qFilter = "open";
+
+// ---------- sign in ----------
+async function boot() {
+  const { data } = await db.auth.getSession();
+  if (!data.session) return showLogin();
+  const { data: me } = await db.from("admins").select("user_id").eq("user_id", data.session.user.id).maybeSingle();
+  if (!me) {
+    await db.auth.signOut();
+    return showLogin("This account isn’t set up as an admin yet.");
+  }
+  $("login").hidden = true;
+  $("app").hidden = false;
+  await loadDays();
+  select(firstToEdit());
+  loadQuestions();
+}
+function showLogin(msg = "") {
+  $("app").hidden = true;
+  $("login").hidden = false;
+  $("loginMsg").textContent = msg;
+  $("loginMsg").className = msg ? "msg err" : "msg";
+}
+$("login").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  $("loginMsg").textContent = "Signing in…";
+  $("loginMsg").className = "msg";
+  const { error } = await db.auth.signInWithPassword({ email: $("email").value.trim(), password: $("password").value });
+  if (error) return showLogin("That email and password didn’t match. Try again.");
+  boot();
+});
+$("signOut").onclick = async () => { await db.auth.signOut(); showLogin(); };
+
+// ---------- tabs ----------
+document.querySelectorAll(".tabs [data-tab]").forEach((b) => (b.onclick = () => {
+  document.querySelectorAll(".tabs [data-tab]").forEach((x) => x === b ? x.setAttribute("aria-current", "page") : x.removeAttribute("aria-current"));
+  $("tab-days").hidden = b.dataset.tab !== "days";
+  $("tab-questions").hidden = b.dataset.tab !== "questions";
+  if (b.dataset.tab === "questions") loadQuestions();
+}));
+
+// ---------- days ----------
+async function loadDays() {
+  const { data, error } = await db.from("days").select("*").order("day_number");
+  if (error) { $("edMsg").textContent = "Couldn’t load the days. Refresh the page to try again."; return; }
+  days = data;
+  renderList();
+}
+const byNum = (n) => days.find((d) => d.day_number === n);
+const hasContent = (d) => d.title || d.prayer || d.commentary;
+function firstToEdit() {
+  const d = days.find((d) => d.status === "draft");
+  return d ? d.day_number : 1;
+}
+function renderList() {
+  $("dayList").innerHTML = days
+    .filter((d) => filter === "all" || d.status === filter)
+    .map((d) => `<button type="button" class="day ${d.day_number === current ? "sel" : ""}" data-n="${d.day_number}">
+        <span class="dot ${d.status} ${hasContent(d) ? "has" : ""}" title="${d.status}"></span>
+        <span class="n">Day ${d.day_number}</span>
+        <span class="t">${esc(d.reference || d.title) || "<span style='color:var(--muted)'>Empty</span>"}</span>
+      </button>`)
+    .join("");
+}
+$("dayList").addEventListener("click", (e) => {
+  const b = e.target.closest(".day");
+  if (!b) return;
+  if (dirty && !confirmLeave(+b.dataset.n)) return;
+  select(+b.dataset.n);
+});
+document.querySelectorAll(".filter button").forEach((b) => (b.onclick = () => {
+  filter = b.dataset.f;
+  document.querySelectorAll(".filter button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+  renderList();
+}));
+
+// In-page "unsaved changes" guard (no browser dialogs)
+let pendingJump = null;
+function confirmLeave(n) {
+  if (pendingJump === n) { pendingJump = null; dirty = false; return true; }
+  pendingJump = n;
+  setMsg(`You have unsaved changes on Day ${current}. Click Day ${n} again to leave without saving.`, true);
+  return false;
+}
+
+function select(n) {
+  current = n;
+  pendingJump = null;
+  const d = byNum(n);
+  $("edTitle").textContent = `Day ${n}`;
+  $("f-title").value = d.title;
+  $("f-reference").value = d.reference;
+  $("f-search").value = d.bible_search === d.reference ? "" : d.bible_search;
+  $("f-prayer").value = d.prayer;
+  $("f-commentary").value = d.commentary;
+  $("f-questions").value = (d.questions || []).join("\n");
+  showStatus(d.status);
+  showAudio(d);
+  dirty = false;
+  setMsg("");
+  renderList();
+}
+function showStatus(s) {
+  $("edStatus").textContent = s === "published" ? "Published" : "Draft";
+  $("edStatus").className = `pill ${s}`;
+  $("unpublish").hidden = s !== "published";
+  $("publish").textContent = s === "published" ? "Save changes" : "Save and publish";
+}
+function setMsg(t, err = false) { $("edMsg").textContent = t; $("edMsg").className = err ? "msg err" : "msg"; }
+document.querySelectorAll("#editor input:not([type=file]), #editor textarea").forEach((el) =>
+  el.addEventListener("input", () => { dirty = true; setMsg("Unsaved changes"); }));
+
+function formValues() {
+  const reference = $("f-reference").value.trim();
+  return {
+    title: $("f-title").value.trim(),
+    reference,
+    bible_search: $("f-search").value.trim() || reference,
+    prayer: $("f-prayer").value.trim(),
+    commentary: $("f-commentary").value.trim(),
+    questions: $("f-questions").value.split("\n").map((q) => q.trim()).filter(Boolean),
+  };
+}
+async function save(status) {
+  const v = formValues();
+  if (status === "published") {
+    const missing = ["title", "reference", "prayer", "commentary"].filter((k) => !v[k]);
+    if (missing.length) return setMsg(`Add the ${missing.join(", ")} before publishing.`, true);
+  }
+  setMsg("Saving…");
+  const { data, error } = await db.from("days").update({ ...v, status }).eq("day_number", current).select().single();
+  if (error) return setMsg("Couldn’t save. Check your connection and try again.", true);
+  Object.assign(byNum(current), data);
+  dirty = false;
+  showStatus(data.status);
+  renderList();
+  setMsg(status === "published" ? "Published. Readers will see it the next time they open the app." : "Draft saved.");
+}
+$("saveDraft").onclick = () => save(byNum(current).status === "published" ? "published" : "draft");
+$("publish").onclick = () => save("published");
+$("unpublish").onclick = () => save("draft");
+
+// ---------- audio ----------
+function showAudio(d) {
+  const has = !!d.audio_path;
+  $("player").hidden = !has;
+  $("removeAudio").hidden = !has;
+  $("pickAudio").textContent = has ? "Replace recording" : "Upload recording";
+  if (has) {
+    $("player").src = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${d.audio_path}`;
+    const m = d.audio_seconds ? ` · ${Math.floor(d.audio_seconds / 60)}:${String(d.audio_seconds % 60).padStart(2, "0")}` : "";
+    $("audioInfo").textContent = `Recording uploaded${m}`;
+  } else {
+    $("player").removeAttribute("src");
+    $("audioInfo").textContent = "No recording yet. Upload an MP3 or M4A file.";
+  }
+}
+const audioLength = (file) => new Promise((res) => {
+  const a = new Audio();
+  a.preload = "metadata";
+  a.onloadedmetadata = () => { res(Math.round(a.duration) || null); URL.revokeObjectURL(a.src); };
+  a.onerror = () => res(null);
+  a.src = URL.createObjectURL(file);
+});
+$("pickAudio").onclick = () => $("audioFile").click();
+$("audioFile").onchange = async (e) => {
+  const file = e.target.files[0];
+  e.target.value = "";
+  if (!file) return;
+  const d = byNum(current);
+  const ext = (file.name.split(".").pop() || "m4a").toLowerCase();
+  const path = `day-${String(current).padStart(3, "0")}-${Date.now()}.${ext}`;
+  $("audioInfo").textContent = `Uploading ${file.name}…`;
+  const seconds = await audioLength(file);
+  const up = await db.storage.from(BUCKET).upload(path, file, { contentType: file.type || "audio/mp4", upsert: false });
+  if (up.error) return ($("audioInfo").textContent = "The upload didn’t finish. Check your connection and try again.");
+  const old = d.audio_path;
+  const { data, error } = await db.from("days").update({ audio_path: path, audio_seconds: seconds }).eq("day_number", current).select().single();
+  if (error) return ($("audioInfo").textContent = "Uploaded, but couldn’t attach it to this day. Try again.");
+  if (old) db.storage.from(BUCKET).remove([old]);
+  Object.assign(d, data);
+  showAudio(d);
+};
+let removeArmed = false;
+$("removeAudio").onclick = async () => {
+  if (!removeArmed) { removeArmed = true; $("removeAudio").textContent = "Click again to remove"; setTimeout(() => { removeArmed = false; $("removeAudio").textContent = "Remove recording"; }, 4000); return; }
+  removeArmed = false;
+  const d = byNum(current), old = d.audio_path;
+  const { data, error } = await db.from("days").update({ audio_path: null, audio_seconds: null }).eq("day_number", current).select().single();
+  if (error) return ($("audioInfo").textContent = "Couldn’t remove the recording. Try again.");
+  if (old) db.storage.from(BUCKET).remove([old]);
+  Object.assign(d, data);
+  $("removeAudio").textContent = "Remove recording";
+  showAudio(d);
+};
+
+// ---------- questions from readers ----------
+document.querySelectorAll(".qf").forEach((b) => (b.onclick = () => {
+  qFilter = b.dataset.q;
+  document.querySelectorAll(".qf").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+  loadQuestions();
+}));
+async function loadQuestions() {
+  const { count } = await db.from("author_questions").select("id", { count: "exact", head: true }).eq("answered", false);
+  $("qCount").textContent = count ? `(${count})` : "";
+  const { data, error } = await db.from("author_questions").select("*").eq("answered", qFilter === "answered").order("created_at", { ascending: false });
+  if (error) return ($("qList").innerHTML = `<p class="msg err">Couldn’t load questions.</p>`);
+  if (!data.length) return ($("qList").innerHTML = `<p class="hint">${qFilter === "open" ? "No new questions. When readers send one from the app, it appears here." : "Nothing marked answered yet."}</p>`);
+  $("qList").innerHTML = data.map((q) => `
+    <div class="q">
+      <div class="meta">Day ${q.day_number ?? "?"} · ${new Date(q.created_at).toLocaleString()} · ${esc(q.reader_name || "Anonymous")}${q.reader_email ? ` · <span style="user-select:all">${esc(q.reader_email)}</span>` : ""}</div>
+      <p>${esc(q.question)}</p>
+      <div><button data-id="${q.id}" data-a="${!q.answered}">${q.answered ? "Mark not answered" : "Mark answered"}</button></div>
+    </div>`).join("");
+}
+$("qList").addEventListener("click", async (e) => {
+  const b = e.target.closest("button[data-id]");
+  if (!b) return;
+  await db.from("author_questions").update({ answered: b.dataset.a === "true" }).eq("id", +b.dataset.id);
+  loadQuestions();
+});
+
+boot();
+</script>
+</body>
+</html>
