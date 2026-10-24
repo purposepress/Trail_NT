@@ -1,0 +1,12 @@
+# Netlify hosts only the admin page (the admin folder). There is nothing to build.
+[build]
+  publish = "admin"
+  command = ""
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
+    X-Robots-Tag = "noindex, nofollow"
