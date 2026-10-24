@@ -48,7 +48,7 @@ export default function Trail() {
                 {done ? "✓ " : ""}Day {n}
               </Text>
               <Text style={[t.body, { flex: 1, fontSize: 16, color: open ? c.ink : c.muted }]} numberOfLines={1}>
-                {open ? d?.reference || "Coming soon" : "Ahead on the trail"}
+                {open ? d?.reference || d?.title || "Coming soon" : "Ahead on the trail"}
               </Text>
             </Pressable>
           );

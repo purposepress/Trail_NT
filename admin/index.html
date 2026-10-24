@@ -108,7 +108,7 @@ header h1{font-size:22px} header h1 span{color:var(--pine)}
         </div>
         <div class="two">
           <label>Title<input id="f-title" placeholder="The family line"></label>
-          <label>Reading<input id="f-reference" placeholder="Matthew 1:1-17"></label>
+          <label>Reading <small>Optional. Leave blank for a day without scripture, like an introduction</small><input id="f-reference" placeholder="Matthew 1:1-17"></label>
         </div>
         <label>Bible Gateway search <small>Leave blank to use the reading above</small><input id="f-search" placeholder="Matthew 1:1-17"></label>
         <label>Centering prayer<textarea id="f-prayer" rows="3"></textarea></label>
@@ -213,7 +213,7 @@ function renderList() {
     .map((d) => `<button type="button" class="day ${d.day_number === current ? "sel" : ""}" data-n="${d.day_number}">
         <span class="dot ${d.status} ${hasContent(d) ? "has" : ""}" title="${d.status}"></span>
         <span class="n">Day ${d.day_number}</span>
-        <span class="t">${esc(d.reference || d.title) || "<span style='color:var(--muted)'>Empty</span>"}</span>
+        <span class="t">${esc(d.title || d.reference) || "<span style='color:var(--muted)'>Empty</span>"}</span>
       </button>`)
     .join("");
 }
@@ -279,7 +279,7 @@ function formValues() {
 async function save(status) {
   const v = formValues();
   if (status === "published") {
-    const missing = ["title", "reference", "prayer", "commentary"].filter((k) => !v[k]);
+    const missing = ["title", "prayer", "commentary"].filter((k) => !v[k]); // reading is optional (e.g. an introduction day)
     if (missing.length) return setMsg(`Add the ${missing.join(", ")} before publishing.`, true);
   }
   setMsg("Saving…");

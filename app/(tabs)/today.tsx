@@ -111,6 +111,7 @@ export default function Today() {
                 <Text style={[styles.prayer, { color: c.ink, borderLeftColor: c.blaze }]}>{day.prayer}</Text>
               </Section>
 
+              {!!day.reference && (
               <Section>
                 <Label>Today’s reading</Label>
                 <View style={[styles.reading, { backgroundColor: c.pineSoft }]}>
@@ -138,6 +139,7 @@ export default function Today() {
                   />
                 </View>
               </Section>
+              )}
 
               <Section>
                 <Label>Commentary</Label>
@@ -239,7 +241,7 @@ function AskTheAuthor({ day, reference }: { day: number; reference: string }) {
   return (
     <Section>
       <Label>Ask the author</Label>
-      <Text style={t.note}>Have a question about {reference}? Send it to the author.</Text>
+      <Text style={t.note}>Have a question about {reference || "today’s stop"}? Send it to the author.</Text>
       {state === "sent" ? (
         <Text style={[t.body, { color: c.pine }]}>Thank you. Your question was sent.</Text>
       ) : (
