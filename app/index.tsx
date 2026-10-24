@@ -1,7 +1,7 @@
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { Image, Pressable, StyleSheet, Text, useColorScheme, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, useColorScheme, useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import TopoBackground from "../components/TopoBackground";
 import { TOTAL_DAYS } from "../lib/config";
@@ -14,6 +14,9 @@ export default function Title() {
   const { progress } = useTrail();
   const bg = useColorScheme() === "dark" ? splash.bgDark : splash.bg;
   const started = progress.completed.length > 0 || progress.reached > 1;
+  // Scale the title to the screen so it stays on one line, with room above the tall capitals.
+  const { width } = useWindowDimensions();
+  const titleSize = Math.min(72, Math.floor((width - 48) / 5.2));
 
   return (
     <View style={[styles.wrap, { backgroundColor: bg, paddingTop: insets.top + 40, paddingBottom: insets.bottom + 36 }]}>
@@ -25,7 +28,12 @@ export default function Title() {
           style={styles.logo}
           accessibilityLabel="Purpose Press: Plan with purpose. Live with faith."
         />
-        <Text style={styles.title} accessibilityRole="header">
+        <Text
+          style={[styles.title, { fontSize: titleSize, lineHeight: Math.round(titleSize * 1.25) }]}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          accessibilityRole="header"
+        >
           The Trail
         </Text>
         <Text style={styles.subtitle}>New Testament</Text>
@@ -50,8 +58,8 @@ export default function Title() {
 const styles = StyleSheet.create({
   wrap: { flex: 1, justifyContent: "space-between", paddingHorizontal: 24, overflow: "hidden" },
   logo: { width: 112, height: 112, marginBottom: 28 },
-  title: { fontFamily: fonts.display, fontSize: 72, lineHeight: 74, color: splash.ink },
-  subtitle: { fontFamily: fonts.display, fontSize: 30, color: splash.soft, marginTop: 10 },
+  title: { fontFamily: fonts.display, color: splash.ink, paddingTop: 4 },
+  subtitle: { fontFamily: fonts.display, fontSize: 30, lineHeight: 38, color: splash.soft, marginTop: 4 },
   tagline: { fontFamily: fonts.body, fontSize: 18, lineHeight: 27, color: splash.soft, marginTop: 16, maxWidth: 300 },
   cta: { backgroundColor: splash.ink, borderRadius: 999, paddingVertical: 15, paddingHorizontal: 28, alignSelf: "flex-start" },
   ctaText: { fontFamily: fonts.uiBold, fontSize: 17, color: "#1f2a24" },

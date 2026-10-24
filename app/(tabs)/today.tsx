@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
   brand: { fontFamily: fonts.display, fontSize: 20 },
   bar: { height: 4, borderRadius: 2, overflow: "hidden" },
   barFill: { height: 4 },
-  dayNum: { fontFamily: fonts.display, fontSize: 44, lineHeight: 50 },
+  dayNum: { fontFamily: fonts.display, fontSize: 44, lineHeight: 56 },
   of: { fontSize: 18 },
   row: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 10 },
   prayer: { fontFamily: fonts.bodyItalic, fontSize: 19, lineHeight: 29, borderLeftWidth: 3, paddingLeft: 14 },
