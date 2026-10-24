@@ -1,9 +1,9 @@
 import { Tabs } from "expo-router";
 import React from "react";
-import { Text } from "react-native";
+import { ColorValue, Text } from "react-native";
 import { fonts, usePalette } from "../../lib/theme";
 
-const icon = (glyph: string) => ({ color }: { color: string }) => (
+const icon = (glyph: string) => ({ color }: { color: ColorValue }) => (
   <Text style={{ color, fontSize: 18 }}>{glyph}</Text>
 );
 

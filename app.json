@@ -10,7 +10,9 @@
     "ios": {
       "bundleIdentifier": "com.purposepress.thetrail",
       "supportsTablet": true,
-      "config": { "usesNonExemptEncryption": false }
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "com.purposepress.thetrail",
@@ -36,8 +38,11 @@
           "resizeMode": "contain",
           "backgroundColor": "#2f5a45"
         }
-      ]
+      ],
+      "expo-status-bar"
     ],
-    "experiments": { "typedRoutes": false }
+    "experiments": {
+      "typedRoutes": false
+    }
   }
 }

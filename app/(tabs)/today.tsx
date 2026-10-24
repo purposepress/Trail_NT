@@ -19,7 +19,7 @@ export default function Today() {
   const { days, progress, version, setVersion, markComplete, loadNote, saveNote, offline } = useTrail();
   const params = useLocalSearchParams<{ day?: string }>();
   const [current, setCurrent] = useState(progress.reached);
-  const scroll = useRef<ScrollView>(null);
+  const scroll = useRef<React.ComponentRef<typeof ScrollView>>(null);
 
   // When a new day opens, jump to it
   useEffect(() => setCurrent(progress.reached), [progress.reached]);
