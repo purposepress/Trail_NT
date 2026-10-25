@@ -6,7 +6,7 @@ export const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_Yu4IKabwwVHhSA_yNLkbNQ_0
 export const TOTAL_DAYS = 315;
 
 export const LINKS = {
-  purposePress: "https://example.com/purpose-press", // TODO: Purpose Press website
+  purposePress: "https://purpose-press.com",
   substack: "https://purposepress.substack.com",
   substackSubscribe: "https://purposepress.substack.com/subscribe",
 };

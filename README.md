@@ -48,7 +48,6 @@ eas submit --platform android           # needs your Google Play Console account
 
 ## Still to fill in
 
-- Purpose Press website address: `lib/config.ts`
 - Supporter perks: `app/(tabs)/support.tsx`
 - Author photo, bio, and Purpose Press description: `app/(tabs)/about.tsx`
 - Days 1–3 hold sample content marked `[SAMPLE]`. Replace it in the admin page.
