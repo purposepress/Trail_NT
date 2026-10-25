@@ -27,3 +27,6 @@ export const bibleGatewayUrl = (search: string, version: string) =>
 
 export const audioUrl = (path: string) =>
   `${SUPABASE_URL}/storage/v1/object/public/commentary-audio/${path}`;
+
+export const slideUrl = (path: string) =>
+  `${SUPABASE_URL}/storage/v1/object/public/slides/${path}`;

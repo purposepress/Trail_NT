@@ -63,7 +63,7 @@ export function TrailProvider({ children }: { children: React.ReactNode }) {
   const refresh = useCallback(async () => {
     const { data, error } = await supabase
       .from("days")
-      .select("day_number,title,prayer,reference,bible_search,commentary,questions,audio_path,audio_seconds")
+      .select("day_number,title,prayer,reference,bible_search,commentary,questions,audio_path,audio_seconds,slides")
       .eq("status", "published")
       .order("day_number");
     if (error || !data) {
@@ -71,7 +71,7 @@ export function TrailProvider({ children }: { children: React.ReactNode }) {
       return;
     }
     const map: Record<number, Day> = {};
-    data.forEach((d) => (map[d.day_number] = d as Day));
+    data.forEach((d) => (map[d.day_number] = { ...d, slides: d.slides ?? [] } as Day));
     setDays(map);
     setOffline(false);
     AsyncStorage.setItem(KEYS.days, JSON.stringify(map)).catch(() => {});

@@ -70,6 +70,12 @@ header h1{font-size:22px} header h1 span{color:var(--pine)}
 .q .meta{color:var(--muted);font-size:13px}
 .qs{display:flex;flex-direction:column;gap:12px;max-width:760px}
 .hint{color:var(--muted);font-size:13px;margin:0}
+.slides{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.slide{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--bg);display:flex;flex-direction:column}
+.slide img{display:block;width:100%;aspect-ratio:16/9;object-fit:contain;background:#000}
+.slide .bar{display:flex;align-items:center;gap:4px;padding:6px}
+.slide .bar .n{flex:1;color:var(--muted);font-size:12px;font-weight:600}
+.slide .bar button{padding:3px 9px;font-size:12px}
 </style>
 </head>
 <body>
@@ -125,6 +131,16 @@ header h1{font-size:22px} header h1 span{color:var(--pine)}
             <input id="audioFile" type="file" accept="audio/*" hidden>
             <button type="button" id="pickAudio">Upload recording</button>
             <button type="button" id="removeAudio" class="danger" hidden>Remove recording</button>
+          </div>
+        </div>
+
+        <div class="audio">
+          <label style="margin:0">Slides <small>Optional · up to 5 · images or a PDF exported from Keynote, PowerPoint, or Google Slides</small></label>
+          <div id="slideGrid" class="slides"></div>
+          <p id="slideInfo" class="hint">No slides for this day.</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <input id="slideFile" type="file" accept="image/*,application/pdf" multiple hidden>
+            <button type="button" id="pickSlides">Add slides</button>
           </div>
         </div>
 
@@ -253,6 +269,7 @@ function select(n) {
   $("f-questions").value = (d.questions || []).join("\n");
   showStatus(d.status);
   showAudio(d);
+  showSlides(d);
   dirty = false;
   setMsg("");
   renderList();
@@ -350,6 +367,175 @@ $("removeAudio").onclick = async () => {
   $("removeAudio").textContent = "Remove recording";
   showAudio(d);
 };
+
+// ---------- slides ----------
+const SLIDE_BUCKET = "slides";
+const MAX_SLIDES = 5;
+const SLIDE_MAX_PX = 1920; // long side
+const slideUrl = (path) => `${SUPABASE_URL}/storage/v1/object/public/${SLIDE_BUCKET}/${path}`;
+let slideBusy = false;
+
+function showSlides(d) {
+  const slides = d.slides || [];
+  $("slideGrid").innerHTML = slides.map((p, i) => `
+    <div class="slide">
+      <img src="${esc(slideUrl(p))}" alt="Slide ${i + 1}" loading="lazy">
+      <div class="bar">
+        <span class="n">${i + 1}</span>
+        <button type="button" data-act="left" data-i="${i}" ${i === 0 ? "disabled" : ""} aria-label="Move slide ${i + 1} earlier">←</button>
+        <button type="button" data-act="right" data-i="${i}" ${i === slides.length - 1 ? "disabled" : ""} aria-label="Move slide ${i + 1} later">→</button>
+        <button type="button" class="danger" data-act="remove" data-i="${i}" aria-label="Remove slide ${i + 1}">✕</button>
+      </div>
+    </div>`).join("");
+  $("slideInfo").textContent = slides.length
+    ? `${slides.length} of ${MAX_SLIDES} slides. Readers see them in this order.`
+    : "No slides for this day.";
+  $("pickSlides").disabled = slides.length >= MAX_SLIDES || slideBusy;
+  $("pickSlides").textContent = slides.length >= MAX_SLIDES ? "5 slides is the limit" : "Add slides";
+}
+
+function setSlideMsg(t, err = false) {
+  $("slideInfo").textContent = t;
+  $("slideInfo").style.color = err ? "var(--danger)" : "";
+}
+
+// Draw any image source onto a canvas no larger than SLIDE_MAX_PX and return a JPEG blob.
+function toJpeg(source, w, h) {
+  const scale = Math.min(1, SLIDE_MAX_PX / Math.max(w, h));
+  const c = document.createElement("canvas");
+  c.width = Math.round(w * scale);
+  c.height = Math.round(h * scale);
+  const g = c.getContext("2d");
+  g.fillStyle = "#ffffff";
+  g.fillRect(0, 0, c.width, c.height);
+  g.drawImage(source, 0, 0, c.width, c.height);
+  return new Promise((res, rej) => c.toBlob((b) => (b ? res(b) : rej(new Error("encode"))), "image/jpeg", 0.85));
+}
+
+function loadImage(file) {
+  return new Promise((res, rej) => {
+    const img = new Image();
+    img.onload = () => { res(img); URL.revokeObjectURL(img.src); };
+    img.onerror = () => rej(new Error(`Couldn’t read ${file.name}. Try exporting it as PNG or JPEG.`));
+    img.src = URL.createObjectURL(file);
+  });
+}
+
+let pdfjsReady = null;
+function loadPdfJs() {
+  if (!pdfjsReady) pdfjsReady = new Promise((res, rej) => {
+    const s = document.createElement("script");
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+    s.onload = () => {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+      res(window.pdfjsLib);
+    };
+    s.onerror = () => rej(new Error("Couldn’t load the PDF reader. Check your connection."));
+    document.head.appendChild(s);
+  });
+  return pdfjsReady;
+}
+
+// Turn the chosen files into JPEG blobs, one per slide (a PDF gives one per page).
+// Returns the blobs that fit, plus how many slides the files held in total.
+async function filesToSlides(files, room) {
+  const out = [];
+  let total = 0;
+  for (const file of files) {
+    if (file.type === "application/pdf" || /\.pdf$/i.test(file.name)) {
+      const pdfjs = await loadPdfJs();
+      const pdf = await pdfjs.getDocument({ data: await file.arrayBuffer() }).promise;
+      total += pdf.numPages;
+      for (let p = 1; p <= pdf.numPages && out.length < room; p++) {
+        setSlideMsg(`Reading page ${p} of ${pdf.numPages}…`);
+        const page = await pdf.getPage(p);
+        const base = page.getViewport({ scale: 1 });
+        const vp = page.getViewport({ scale: SLIDE_MAX_PX / Math.max(base.width, base.height) });
+        const c = document.createElement("canvas");
+        c.width = Math.round(vp.width);
+        c.height = Math.round(vp.height);
+        const g = c.getContext("2d");
+        g.fillStyle = "#ffffff";
+        g.fillRect(0, 0, c.width, c.height);
+        await page.render({ canvasContext: g, viewport: vp }).promise;
+        out.push(await toJpeg(c, c.width, c.height));
+      }
+    } else {
+      total += 1;
+      if (out.length >= room) continue;
+      const img = await loadImage(file);
+      out.push(await toJpeg(img, img.naturalWidth, img.naturalHeight));
+    }
+  }
+  return { blobs: out, total };
+}
+
+async function saveSlides(list) {
+  const { data, error } = await db.from("days").update({ slides: list }).eq("day_number", current).select().single();
+  if (error) throw error;
+  Object.assign(byNum(current), data);
+  return data;
+}
+
+$("pickSlides").onclick = () => $("slideFile").click();
+$("slideFile").onchange = async (e) => {
+  const files = [...e.target.files];
+  e.target.value = "";
+  if (!files.length || slideBusy) return;
+  const d = byNum(current), day = current;
+  const existing = d.slides || [];
+  const room = MAX_SLIDES - existing.length;
+  slideBusy = true;
+  $("pickSlides").disabled = true;
+  const uploaded = [];
+  try {
+    setSlideMsg("Preparing slides…");
+    const { blobs, total } = await filesToSlides(files, room);
+    const pad = String(day).padStart(3, "0");
+    for (let i = 0; i < blobs.length; i++) {
+      setSlideMsg(`Uploading slide ${i + 1} of ${blobs.length}…`);
+      const path = `day-${pad}/${Date.now()}-${i}.jpg`;
+      const up = await db.storage.from(SLIDE_BUCKET).upload(path, blobs[i], { contentType: "image/jpeg", cacheControl: "31536000", upsert: false });
+      if (up.error) throw new Error("An upload didn’t finish. Check your connection and try again.");
+      uploaded.push(path);
+    }
+    const data = await saveSlides([...existing, ...uploaded]);
+    slideBusy = false;
+    if (current === day) showSlides(data);
+    const over = total > blobs.length ? ` Only the first ${blobs.length} fit, because a day can have ${MAX_SLIDES} slides.` : "";
+    if (current === day) setSlideMsg(`Added ${uploaded.length} slide${uploaded.length === 1 ? "" : "s"}.${over}`);
+  } catch (err) {
+    if (uploaded.length) db.storage.from(SLIDE_BUCKET).remove(uploaded);
+    slideBusy = false;
+    if (current === day) { showSlides(byNum(day)); setSlideMsg(err.message || "Couldn’t add the slides. Try again.", true); }
+  }
+};
+let removeArmedAt = -1;
+$("slideGrid").addEventListener("click", async (e) => {
+  const b = e.target.closest("button[data-act]");
+  if (!b || slideBusy) return;
+  const d = byNum(current), list = [...(d.slides || [])], i = +b.dataset.i;
+  if (b.dataset.act === "remove") {
+    if (removeArmedAt !== i) {
+      removeArmedAt = i;
+      b.textContent = "Remove?";
+      setTimeout(() => { if (removeArmedAt === i) { removeArmedAt = -1; showSlides(byNum(current)); } }, 4000);
+      return;
+    }
+    removeArmedAt = -1;
+    const [gone] = list.splice(i, 1);
+    try {
+      showSlides(await saveSlides(list));
+      db.storage.from(SLIDE_BUCKET).remove([gone]);
+    } catch { setSlideMsg("Couldn’t remove the slide. Try again.", true); }
+    return;
+  }
+  const j = b.dataset.act === "left" ? i - 1 : i + 1;
+  if (j < 0 || j >= list.length) return;
+  [list[i], list[j]] = [list[j], list[i]];
+  try { showSlides(await saveSlides(list)); }
+  catch { setSlideMsg("Couldn’t reorder the slides. Try again.", true); }
+});
 
 // ---------- questions from readers ----------
 document.querySelectorAll(".qf").forEach((b) => (b.onclick = () => {

@@ -16,4 +16,5 @@ export type Day = {
   questions: string[];
   audio_path: string | null;
   audio_seconds: number | null;
+  slides: string[]; // storage paths in the slides bucket, in display order (0–5)
 };

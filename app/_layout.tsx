@@ -7,10 +7,12 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { lockPortraitOnPhones } from "../lib/orientation";
 import { TrailProvider, useTrail } from "../lib/store";
 import { usePalette } from "../lib/theme";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
+lockPortraitOnPhones();
 
 function Root() {
   const { ready } = useTrail();

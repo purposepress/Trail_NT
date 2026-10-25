@@ -2,9 +2,10 @@ import { LinearGradient } from "expo-linear-gradient";
 import { router, useLocalSearchParams } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, useWindowDimensions, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AudioPlayer from "../../components/AudioPlayer";
+import Slides from "../../components/Slides";
 import { Button, Label, makeText, Section } from "../../components/ui";
 import { bibleGatewayUrl, TOTAL_DAYS, TRANSLATIONS } from "../../lib/config";
 import { useTrail } from "../../lib/store";
@@ -20,6 +21,8 @@ export default function Today() {
   const params = useLocalSearchParams<{ day?: string }>();
   const [current, setCurrent] = useState(progress.reached);
   const scroll = useRef<React.ComponentRef<typeof ScrollView>>(null);
+  const { width: screenW } = useWindowDimensions();
+  const contentWidth = Math.min(screenW, 640) - 40; // matches the page padding
 
   // When a new day opens, jump to it
   useEffect(() => setCurrent(progress.reached), [progress.reached]);
@@ -163,6 +166,13 @@ export default function Today() {
                   />
                 )}
               </Section>
+
+              {day.slides?.length > 0 && (
+                <Section>
+                  <Label>Slides</Label>
+                  <Slides paths={day.slides} contentWidth={contentWidth} />
+                </Section>
+              )}
 
               <Section>
                 <Label>Small group questions</Label>
