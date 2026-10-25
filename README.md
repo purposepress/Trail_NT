@@ -30,7 +30,7 @@ npx expo start     # starts the app; scan the QR code with the Expo Go app on yo
    ```sql
    insert into public.admins (user_id) select id from auth.users where email = 'you@example.com';
    ```
-3. Open the admin page online at its Netlify address. Netlify is connected to this GitHub repository and publishes the `admin` folder (see `netlify.toml`), so changes pushed to GitHub go live automatically.
+3. Open the admin page online at https://trail-admin-purposepress.netlify.app/. Netlify is connected to this GitHub repository and publishes the `admin` folder (see `netlify.toml`), so changes pushed to GitHub go live automatically.
    To run it on your Mac instead: `npm run admin`, then go to http://localhost:5050.
 
 Content published there shows up in the app the next time a reader opens it. No app update is needed.
