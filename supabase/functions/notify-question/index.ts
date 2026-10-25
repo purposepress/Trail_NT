@@ -8,12 +8,12 @@
 //   RESEND_API_KEY   from resend.com
 // Optional secrets:
 //   NOTIFY_EMAIL     where notifications go (default below)
-//   NOTIFY_FROM      sender, e.g. "The Trail <questions@purpose-press.com>" once the domain is verified in Resend
+//   NOTIFY_FROM      sender (default: The Trail <questions@purpose-press.com>; purpose-press.com is verified in Resend)
 
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 const NOTIFY_EMAIL = Deno.env.get("NOTIFY_EMAIL") ?? "frank.shirvinski@purpose-press.com";
-const NOTIFY_FROM = Deno.env.get("NOTIFY_FROM") ?? "The Trail <onboarding@resend.dev>";
+const NOTIFY_FROM = Deno.env.get("NOTIFY_FROM") ?? "The Trail <questions@purpose-press.com>";
 const ADMIN_URL = "https://trail-admin-purposepress.netlify.app/";
 
 function secretKey(): string {
