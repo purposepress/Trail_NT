@@ -49,5 +49,4 @@ eas submit --platform android           # needs your Google Play Console account
 ## Still to fill in
 
 - Supporter perks: `app/(tabs)/support.tsx`
-- About page: bios are a condensed draft; final wording goes in `app/(tabs)/about.tsx`
 - Days 1–3 hold sample content marked `[SAMPLE]`. Replace it in the admin page.
