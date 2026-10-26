@@ -83,7 +83,7 @@ export default function Today() {
         <ScrollView ref={scroll} contentContainerStyle={styles.page} keyboardShouldPersistTaps="handled">
           <Pressable onPress={() => router.replace("/")} accessibilityLabel="Show title screen">
             <Text style={[styles.brand, { color: c.ink }]}>
-              The Trail: <Text style={{ color: c.pine }}>New Testament</Text>
+              The Trail: <Text style={{ color: c.pine }}>New Testament Edition</Text>
             </Text>
           </Pressable>
           <TrailBar completed={progress.completed.length} />
@@ -291,7 +291,7 @@ function AskTheAuthor({ day, reference }: { day: number; reference: string }) {
 
 const styles = StyleSheet.create({
   page: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 48, maxWidth: 640, width: "100%", alignSelf: "center" },
-  brand: { fontFamily: fonts.display, fontSize: 20 },
+  brand: { fontFamily: fonts.display, fontSize: 18, lineHeight: 24 },
   bar: { height: 4, borderRadius: 2, overflow: "hidden" },
   barFill: { height: 4 },
   dayNum: { fontFamily: fonts.display, fontSize: 44, lineHeight: 56 },

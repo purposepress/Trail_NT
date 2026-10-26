@@ -36,7 +36,7 @@ export default function Title() {
         >
           The Trail
         </Text>
-        <Text style={styles.subtitle}>New Testament</Text>
+        <Text style={styles.subtitle}>New Testament Edition</Text>
         <Text style={styles.tagline}>315 days through the New Testament, one step at a time.</Text>
       </View>
       <View style={{ gap: 12 }}>
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   wrap: { flex: 1, justifyContent: "space-between", paddingHorizontal: 24, overflow: "hidden" },
   logo: { width: 112, height: 112, marginBottom: 28 },
   title: { fontFamily: fonts.display, color: splash.ink, paddingTop: 4 },
-  subtitle: { fontFamily: fonts.display, fontSize: 30, lineHeight: 38, color: splash.soft, marginTop: 4 },
+  subtitle: { fontFamily: fonts.display, fontSize: 26, lineHeight: 34, color: splash.soft, marginTop: 4 },
   tagline: { fontFamily: fonts.body, fontSize: 18, lineHeight: 27, color: splash.soft, marginTop: 16, maxWidth: 300 },
   cta: { backgroundColor: splash.ink, borderRadius: 999, paddingVertical: 15, paddingHorizontal: 28, alignSelf: "flex-start" },
   ctaText: { fontFamily: fonts.uiBold, fontSize: 17, color: "#1f2a24" },

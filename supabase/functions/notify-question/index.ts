@@ -86,7 +86,7 @@ Deno.serve(async () => {
     const html = `
       <div style="font-family:Georgia,serif;font-size:16px;line-height:1.55;color:#1f2a24;max-width:560px">
         <p style="font-family:Arial,sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#5d6a62;margin:0 0 6px">
-          The Trail: New Testament${dayLabel ? ` · ${esc(dayLabel)}` : ""}
+          The Trail: New Testament Edition${dayLabel ? ` · ${esc(dayLabel)}` : ""}
         </p>
         <p style="margin:0 0 14px"><strong>${esc(who)}</strong> sent a question:</p>
         <blockquote style="margin:0 0 18px;padding:12px 16px;border-left:3px solid #c98a1b;background:#f3f1ec;white-space:pre-wrap">${esc(claimed.question)}</blockquote>

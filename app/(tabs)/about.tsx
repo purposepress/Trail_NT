@@ -69,7 +69,7 @@ export default function About() {
         <View style={{ gap: 6, marginBottom: 16 }}>
           <Label>About us</Label>
           <Text style={t.h2} accessibilityRole="header">
-            Welcome to The Trail: New Testament
+            Welcome to The Trail: New Testament Edition
           </Text>
         </View>
 

@@ -1,4 +1,4 @@
-# The Trail: New Testament
+# The Trail: New Testament Edition
 
 A free 315-day devotional app for iPhone and Android from Purpose Press. A new day opens each day the reader returns; days aren't tied to the calendar.
 
