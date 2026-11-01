@@ -11,46 +11,49 @@ import { usePalette } from "../../lib/theme";
 // ---------- About page text (Frank's wording) ----------
 
 const WELCOME =
-  "The Trail: New Testament Edition walks you through the New Testament one day at a time. A new day opens each time you return, so there’s no calendar to keep up with. If you miss a week, The Trail waits for you.";
+  "Join us as we explore and encounter the New Testament together. A new day opens each day you return to The Trail, so there is no calendar to keep up with. If you miss a week, The Trail waits for you.";
 
 const FEATURES = [
   { label: "Centering prayer", text: "A short prayer to quiet distractions and turn your attention to God." },
   {
     label: "Reading",
-    text: "The New Testament in an arrangement that begins with the story of Jesus and the experience of the earliest believers, guiding you along the path of discipleship. Read it in the translation you prefer.",
+    text: "Daily readings guide you through the New Testament in manageable portions and along the path of discipleship. Links let you read in the translation you prefer.",
   },
-  { label: "Commentary", text: "Reflections on the passage that you can read or listen to, recorded by Frank and Stacy." },
-  { label: "Small group questions", text: "Prompts for discussion, whether you’re with a group or reading on your own." },
-  { label: "My notes", text: "A private place to write down your thoughts. Your notes stay on your phone." },
+  { label: "Commentary", text: "Commentary on each passage that you can read or listen to, recorded by Frank and Stacy." },
+  {
+    label: "Small group questions",
+    text: "Whether you lead a small group, read as a family, or read on your own, these questions help spark discussion and reflection.",
+  },
+  { label: "My notes", text: "A private place to record your thoughts. Your notes stay on your phone." },
   {
     label: "Ask the author",
-    text: "Questions will come up along the way. Send them from the app and we’ll get back to you. We want to walk this trail with you.",
+    text: "Questions may come up as you journey through the New Testament. Send them to us from the app, and we will get back to you. We want to walk this trail with you.",
   },
 ];
 
 const KEEP_GOING =
-  "When you finish the New Testament, continue through the whole Bible and the Apocrypha with the Trail Journal and our podcast.";
+  "When you finish the New Testament, continue through the whole Bible and the Apocrypha with The Trail Journal and our accompanying video commentary.";
 
 const PEOPLE = [
   {
     name: "Frank Shirvinski",
     photo: require("../../assets/images/frank.jpg"),
     bio:
-      "Frank is an aerospace engineer, author, and minister who works to bridge the perceived gaps between science and theology. He studied aerospace engineering at Purdue University, then earned a Master of Divinity in Old Testament/Hebrew Bible from Emmanuel School of Religion and a Master of Theology from Emory University, followed by doctoral studies in Historical Linguistics at the University of Georgia. He has served churches in Tennessee, Georgia, and Arizona, including fifteen years as Senior Minister at Chaparral Christian Church in Scottsdale, and has taught Hebrew at Fuller Theological Seminary and biblical studies at Atlanta Christian College. Today he is a Senior Principal Engineer for spacecraft systems at Optimum Technologies.",
+      "Frank is an aerospace engineer, author, and minister who is working to bridge the perceived gaps between science and theology. He studied aerospace engineering at Purdue University, then earned a Master of Divinity in Old Testament/Hebrew Bible from Emmanuel School of Religion and a Master of Theology from Emory University, followed by doctoral studies in Historical Linguistics at the University of Georgia. He has served churches in Tennessee, Georgia, and Arizona, including fifteen years as Senior Minister at Chaparral Christian Church in Scottsdale. He has taught Hebrew at Fuller Theological Seminary and biblical studies at Atlanta Christian College. Today he is a Senior Principal Engineer for spacecraft systems at Optimum Technologies.",
   },
   {
     name: "Stacy Shirvinski",
     photo: require("../../assets/images/stacy.jpg"),
     bio:
-      "Stacy studied psychology at Purdue, where she met Frank. She has spent years in church ministry, first with youth and then in children’s ministry, creating events that help kids grow in their faith. She also founded Andie’s Coffee in Scottsdale, a gathering place where people come together and feel at home. Her work has been recognized with nominations for MASK magazine’s Moms Making a Difference Award and the Greater Phoenix Chamber of Commerce Impact Award.",
+      "Stacy studied psychology at Purdue, where she met Frank. She has spent years in children’s ministry, creating events that help kids grow in their faith. She also founded Andie’s Coffee in Scottsdale, a gathering place where people come together and feel at home. Her work has been recognized with nominations for MASK magazine’s Moms Making a Difference Award and the Greater Phoenix Chamber of Commerce Impact Award.",
   },
 ];
 
 const WHY =
-  "Frank and Stacy created The Trail: New Testament Edition to help those seeking to engage with the Bible for the first time, as well as those who are looking to dig a bit deeper into these sacred writings.";
+  "Frank and Stacy created The Trail: New Testament Edition to help those engaging with the Bible for the first time and those who want to dig deeper into these sacred writings.";
 
 const MISSION =
-  "Purpose Press creates tools to help you understand the Bible more deeply and grow closer to Christ, whether you’re exploring Scripture on your own, leading a small group, or sharing stories of faith with your children or grandchildren.";
+  "Purpose Press creates tools to help you understand the Bible more deeply and grow closer to Christ, whether you are exploring Scripture on your own, leading a small group, or sharing stories of faith with your children or grandchildren.";
 
 const MOTTO = "Our desire is not to see a different world, but to see the same world differently.";
 
@@ -90,7 +93,7 @@ export default function About() {
         <Section>
           <Text style={t.h3}>Keep going</Text>
           <Text style={t.body}>{KEEP_GOING}</Text>
-          <Button primary title="Visit Purpose Press ↗" onPress={() => WebBrowser.openBrowserAsync(LINKS.purposePress)} />
+          <Button primary title="Get The Trail Journal ↗" onPress={() => WebBrowser.openBrowserAsync(LINKS.trailJournal)} />
         </Section>
 
         <Section>
@@ -120,6 +123,7 @@ export default function About() {
           <Text style={t.h3}>The Mission of Purpose Press</Text>
           <Text style={t.body}>{MISSION}</Text>
           <Text style={[t.body, { fontStyle: "italic", color: c.pine }]}>{MOTTO}</Text>
+          <Button title="Visit Purpose Press ↗" onPress={() => WebBrowser.openBrowserAsync(LINKS.purposePress)} />
         </Section>
 
         <Section>

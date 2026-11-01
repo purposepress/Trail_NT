@@ -7,6 +7,7 @@ export const TOTAL_DAYS = 315;
 
 export const LINKS = {
   purposePress: "https://purpose-press.com",
+  trailJournal: "https://purpose-press.store/products/the-trail-a-journey-through-the-bible",
   substack: "https://purposepress.substack.com",
   substackSubscribe: "https://purposepress.substack.com/subscribe",
 };
