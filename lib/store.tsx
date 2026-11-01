@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { AppState } from "react-native";
-import { TOTAL_DAYS } from "./config";
+import { DEFAULT_TRANSLATION, TOTAL_DAYS, TRANSLATIONS } from "./config";
 import { Day, supabase } from "./supabase";
 
 const KEYS = {
@@ -50,7 +50,7 @@ export function TrailProvider({ children }: { children: React.ReactNode }) {
   const [ready, setReady] = useState(false);
   const [days, setDays] = useState<Record<number, Day>>({});
   const [progress, setProgress] = useState<Progress>(freshProgress);
-  const [version, setVersionState] = useState("NRSVUE");
+  const [version, setVersionState] = useState(DEFAULT_TRANSLATION);
   const [offline, setOffline] = useState(false);
   const progressRef = useRef(progress);
   progressRef.current = progress;
@@ -86,7 +86,8 @@ export function TrailProvider({ children }: { children: React.ReactNode }) {
           AsyncStorage.getItem(KEYS.version),
         ]);
         if (cached) setDays(JSON.parse(cached));
-        if (v) setVersionState(v);
+        // Ignore a saved choice that is no longer offered (e.g. NRSV Updated, CEB).
+        if (v && TRANSLATIONS.some((t) => t.code === v)) setVersionState(v);
         persistProgress(advance(p ? JSON.parse(p) : freshProgress));
       } catch {
         persistProgress(advance(freshProgress));

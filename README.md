@@ -2,7 +2,7 @@
 
 A free 315-day devotional app for iPhone and Android from Purpose Press. A new day opens each day the reader returns; days aren't tied to the calendar.
 
-Each day has a centering prayer, a New Testament reading that opens on Bible Gateway (NRSV by default), commentary with the author's recording, small group questions, private notes, and a way to send a question to the author.
+Each day has a centering prayer, a New Testament reading that opens on Bible Gateway (NRSV by default; NRSV, ESV, KJV, NIV), commentary with the author's recording, small group questions, private notes, and a way to send a question to the author.
 
 ## What's here
 

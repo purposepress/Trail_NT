@@ -13,15 +13,12 @@ export const LINKS = {
 };
 
 export const TRANSLATIONS = [
-  { code: "NRSVUE", label: "NRSV (Updated)" },
   { code: "NRSV", label: "NRSV" },
-  { code: "NIV", label: "NIV" },
   { code: "ESV", label: "ESV" },
-  { code: "NLT", label: "NLT" },
-  { code: "CEB", label: "CEB" },
   { code: "KJV", label: "KJV" },
-  { code: "MSG", label: "The Message" },
+  { code: "NIV", label: "NIV" },
 ];
+export const DEFAULT_TRANSLATION = "NRSV";
 
 export const bibleGatewayUrl = (search: string, version: string) =>
   `https://www.biblegateway.com/passage/?search=${encodeURIComponent(search)}&version=${version}`;
