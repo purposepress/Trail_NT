@@ -79,12 +79,12 @@ export default function AudioPlayer({ path, seconds }: { path: string | null; se
           hitSlop={10}
           style={[styles.track, { backgroundColor: c.line }]}
         >
-          <View style={[styles.fill, { width: `${pct * 100}%`, backgroundColor: c.pine }]} />
+          <View style={[styles.fill, { width: `${pct * 100}%`, backgroundColor: c.pineText }]} />
         </Pressable>
         <View style={styles.times}>
           <Text style={[styles.time, { color: c.muted }]}>{fmt(status.currentTime)}</Text>
           <Pressable onPress={() => player.seekTo(Math.max(0, status.currentTime - 15))} accessibilityLabel="Back 15 seconds">
-            <Text style={[styles.time, { color: c.pine }]}>↺ 15s</Text>
+            <Text style={[styles.time, { color: c.pineText }]}>↺ 15s</Text>
           </Pressable>
           <Text style={[styles.time, { color: c.muted }]}>{fmt(duration)}</Text>
         </View>

@@ -44,7 +44,7 @@ export default function Trail() {
                 n === progress.reached && { backgroundColor: c.pineSoft },
               ]}
             >
-              <Text style={[styles.d, { color: done ? c.pine : c.muted }]}>
+              <Text style={[styles.d, { color: done ? c.pineText : c.muted }]}>
                 {done ? "✓ " : ""}Day {n}
               </Text>
               <Text style={[t.body, { flex: 1, fontSize: 16, color: open ? c.ink : c.muted }]} numberOfLines={1}>

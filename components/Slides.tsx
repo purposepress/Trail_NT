@@ -69,7 +69,7 @@ export default function Slides({ paths, contentWidth }: { paths: string[]; conte
         {!single && (
           <View style={styles.dots}>
             {urls.map((u, i) => (
-              <View key={u} style={[styles.dot, { backgroundColor: i === page ? c.pine : c.line }]} />
+              <View key={u} style={[styles.dot, { backgroundColor: i === page ? c.pineText : c.line }]} />
             ))}
           </View>
         )}

@@ -122,7 +122,7 @@ export default function About() {
           />
           <Text style={t.h3}>The Mission of Purpose Press</Text>
           <Text style={t.body}>{MISSION}</Text>
-          <Text style={[t.body, { fontStyle: "italic", color: c.pine }]}>{MOTTO}</Text>
+          <Text style={[t.body, { fontStyle: "italic", color: c.pineText }]}>{MOTTO}</Text>
           <Button title="Visit Purpose Press ↗" onPress={() => WebBrowser.openBrowserAsync(LINKS.purposePress)} />
         </Section>
 

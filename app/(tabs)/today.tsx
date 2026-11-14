@@ -83,14 +83,14 @@ export default function Today() {
         <ScrollView ref={scroll} contentContainerStyle={styles.page} keyboardShouldPersistTaps="handled">
           <Pressable onPress={() => router.replace("/")} accessibilityLabel="Show title screen">
             <Text style={[styles.brand, { color: c.ink }]}>
-              The Trail: <Text style={{ color: c.pine }}>New Testament Edition</Text>
+              The Trail: <Text style={{ color: c.pineText }}>New Testament Edition</Text>
             </Text>
           </Pressable>
           <TrailBar completed={progress.completed.length} />
 
           <View style={{ gap: 6, marginTop: 18 }}>
             <Label>{done ? "Completed" : isFrontier ? "Today on the trail" : "Revisiting"}</Label>
-            <Text style={[styles.dayNum, { color: c.pine }]}>
+            <Text style={[styles.dayNum, { color: c.pineText }]}>
               {current} <Text style={[styles.of, { color: c.muted }]}>of {TOTAL_DAYS}</Text>
             </Text>
             <Text style={t.h2}>{day?.title || "The next stop is coming soon"}</Text>
@@ -118,7 +118,7 @@ export default function Today() {
               <Section>
                 <Label>Today’s reading</Label>
                 <View style={[styles.reading, { backgroundColor: c.pineSoft }]}>
-                  <Text style={[styles.ref, { color: c.pine }]}>{day.reference}</Text>
+                  <Text style={[styles.ref, { color: c.pineText }]}>{day.reference}</Text>
                   <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 6 }}>
                     {TRANSLATIONS.map((tr) => (
                       <Pressable
@@ -212,7 +212,7 @@ function TrailBar({ completed }: { completed: number }) {
   return (
     <View style={{ marginTop: 12, gap: 6 }}>
       <View style={[styles.bar, { backgroundColor: c.line }]}>
-        <View style={[styles.barFill, { width: `${pct * 100}%`, backgroundColor: c.pine }]} />
+        <View style={[styles.barFill, { width: `${pct * 100}%`, backgroundColor: c.pineText }]} />
       </View>
       <Label>
         {completed} / {TOTAL_DAYS} complete
@@ -253,7 +253,7 @@ function AskTheAuthor({ day, reference }: { day: number; reference: string }) {
       <Label>Ask the author</Label>
       <Text style={t.note}>Have a question about {reference || "today’s stop"}? Send it to the author.</Text>
       {state === "sent" ? (
-        <Text style={[t.body, { color: c.pine }]}>Thank you. Your question was sent.</Text>
+        <Text style={[t.body, { color: c.pineText }]}>Thank you. Your question was sent.</Text>
       ) : (
         <>
           <TextInput

@@ -10,7 +10,8 @@ export const palettes = {
     ink: "#423934", // dark brown
     muted: "#6b5d52",
     line: "#d6c6b2",
-    pine: "#4c4c34", // olive, the dominant color
+    pine: "#4c4c34", // olive, the dominant color (buttons, fills)
+    pineText: "#4c4c34", // olive for headings and accent text
     pineSoft: "#dcd8c4", // olive tint on cream
     blaze: "#7b4c2b", // brown accent
     onPine: "#f6efe7",
@@ -24,10 +25,11 @@ export const palettes = {
     ink: "#ebded0",
     muted: "#a8968a",
     line: "#4a403a",
-    pine: "#c6ac90", // tan: buttons, headings, links in dark mode
+    pine: "#4c4c34", // olive stays the base color for buttons and fills
+    pineText: "#ebded0", // olive is too dark to read as text here, so accent text is cream
     pineSoft: "#3d3d2a", // deep olive tint for the reading box and highlights
     blaze: "#c58b5c", // brown, lightened to read on dark
-    onPine: "#26211e",
+    onPine: "#ebded0",
     tabBar: "#3a3a28", // olive
     tabActive: "#ebded0",
     tabInactive: "#a8968a",
