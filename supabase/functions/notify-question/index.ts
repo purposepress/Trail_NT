@@ -84,16 +84,16 @@ Deno.serve(async () => {
     ].join("\n");
 
     const html = `
-      <div style="font-family:Georgia,serif;font-size:16px;line-height:1.55;color:#1f2a24;max-width:560px">
-        <p style="font-family:Arial,sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#5d6a62;margin:0 0 6px">
+      <div style="font-family:Georgia,serif;font-size:16px;line-height:1.55;color:#423934;max-width:560px">
+        <p style="font-family:Arial,sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#6b5d52;margin:0 0 6px">
           The Trail: New Testament Edition${dayLabel ? ` · ${esc(dayLabel)}` : ""}
         </p>
         <p style="margin:0 0 14px"><strong>${esc(who)}</strong> sent a question:</p>
-        <blockquote style="margin:0 0 18px;padding:12px 16px;border-left:3px solid #c98a1b;background:#f3f1ec;white-space:pre-wrap">${esc(claimed.question)}</blockquote>
-        <p style="margin:0 0 14px;color:#5d6a62;font-size:14px">
+        <blockquote style="margin:0 0 18px;padding:12px 16px;border-left:3px solid #7b4c2b;background:#ebded0;white-space:pre-wrap">${esc(claimed.question)}</blockquote>
+        <p style="margin:0 0 14px;color:#6b5d52;font-size:14px">
           ${validEmail ? `Reply to this email to answer ${esc(who)} at ${esc(email)}.` : "The reader didn’t leave an email address, so you can’t reply directly."}
         </p>
-        <p style="margin:0"><a href="${ADMIN_URL}" style="color:#2f5a45">Open the admin page</a> to see all questions.</p>
+        <p style="margin:0"><a href="${ADMIN_URL}" style="color:#4c4c34">Open the admin page</a> to see all questions.</p>
       </div>`;
 
     const res = await fetch("https://api.resend.com/emails", {
