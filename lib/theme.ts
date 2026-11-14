@@ -1,12 +1,12 @@
 import { useColorScheme } from "react-native";
 
 // Purpose Press palette: olive #4c4c34 (dominant), cream #ebded0, dark brown #423934,
-// tan #c6ac90, brown #7b4c2b. Token names are kept from the first design:
+// tan #c6ac90, brown #7b4c2b, white #ffffff. Token names are kept from the first design:
 // "pine" is the primary (olive) color and "blaze" is the accent (brown/tan).
 export const palettes = {
   light: {
     bg: "#ebded0", // cream
-    surface: "#f6efe7", // lighter cream for cards and inputs
+    surface: "#ffffff", // white for cards, inputs, and the audio player
     ink: "#423934", // dark brown
     muted: "#6b5d52",
     line: "#d6c6b2",
@@ -14,9 +14,9 @@ export const palettes = {
     pineText: "#4c4c34", // olive for headings and accent text
     pineSoft: "#dcd8c4", // olive tint on cream
     blaze: "#7b4c2b", // brown accent
-    onPine: "#f6efe7",
+    onPine: "#ffffff", // white text on olive buttons
     tabBar: "#4c4c34",
-    tabActive: "#ebded0",
+    tabActive: "#ffffff",
     tabInactive: "#c6ac90",
   },
   dark: {
@@ -29,9 +29,9 @@ export const palettes = {
     pineText: "#ebded0", // olive is too dark to read as text here, so accent text is cream
     pineSoft: "#3d3d2a", // deep olive tint for the reading box and highlights
     blaze: "#c58b5c", // brown, lightened to read on dark
-    onPine: "#ebded0",
+    onPine: "#ffffff",
     tabBar: "#3a3a28", // olive
-    tabActive: "#ebded0",
+    tabActive: "#ffffff",
     tabInactive: "#a8968a",
   },
 };
@@ -42,8 +42,8 @@ export type Palette = typeof palettes.light;
 export const splash = {
   bg: "#4c4c34",
   bgDark: "#3a3a28",
-  ink: "#ebded0",
-  inkDark: "#423934", // text on cream buttons
+  ink: "#ffffff", // title and button on the olive title screen
+  inkDark: "#423934", // text on the white button
   soft: "#e2d5c6",
   sub: "#d8c6b0",
   gold: "#c6ac90", // summit marker (tan)
