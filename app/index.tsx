@@ -62,6 +62,6 @@ const styles = StyleSheet.create({
   subtitle: { fontFamily: fonts.display, fontSize: 26, lineHeight: 34, color: splash.soft, marginTop: 4 },
   tagline: { fontFamily: fonts.body, fontSize: 18, lineHeight: 27, color: splash.soft, marginTop: 16, maxWidth: 300 },
   cta: { backgroundColor: splash.ink, borderRadius: 999, paddingVertical: 15, paddingHorizontal: 28, alignSelf: "flex-start" },
-  ctaText: { fontFamily: fonts.uiBold, fontSize: 17, color: "#1f2a24" },
+  ctaText: { fontFamily: fonts.uiBold, fontSize: 17, color: splash.inkDark },
   sub: { fontFamily: fonts.ui, fontSize: 14, color: splash.sub },
 });

@@ -177,8 +177,8 @@ const styles = StyleSheet.create({
   hint: { fontFamily: fonts.ui, fontSize: 13 },
   viewer: { flex: 1, backgroundColor: "#000" },
   bar: { position: "absolute", flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
-  count: { fontFamily: fonts.uiBold, fontSize: 14, color: "#f3f1ec", fontVariant: ["tabular-nums"] },
-  close: { backgroundColor: "rgba(243,241,236,0.16)", borderRadius: 999, paddingVertical: 7, paddingHorizontal: 16 },
-  closeText: { fontFamily: fonts.uiBold, fontSize: 15, color: "#f3f1ec" },
-  tip: { position: "absolute", left: 0, right: 0, textAlign: "center", fontFamily: fonts.ui, fontSize: 13, color: "rgba(243,241,236,0.7)" },
+  count: { fontFamily: fonts.uiBold, fontSize: 14, color: "#ebded0", fontVariant: ["tabular-nums"] },
+  close: { backgroundColor: "rgba(235,222,208,0.16)", borderRadius: 999, paddingVertical: 7, paddingHorizontal: 16 },
+  closeText: { fontFamily: fonts.uiBold, fontSize: 15, color: "#ebded0" },
+  tip: { position: "absolute", left: 0, right: 0, textAlign: "center", fontFamily: fonts.ui, fontSize: 13, color: "rgba(235,222,208,0.7)" },
 });
