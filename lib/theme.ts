@@ -22,15 +22,15 @@ export const palettes = {
     bg: "#26211e",
     surface: "#332c28",
     ink: "#ebded0",
-    muted: "#c6ac90",
+    muted: "#a8968a",
     line: "#4a403a",
-    pine: "#b4b08a", // olive, lightened to read on dark
-    pineSoft: "#3a3a2c",
-    blaze: "#c6ac90", // tan accent
+    pine: "#c6ac90", // tan: buttons, headings, links in dark mode
+    pineSoft: "#3d3d2a", // deep olive tint for the reading box and highlights
+    blaze: "#c58b5c", // brown, lightened to read on dark
     onPine: "#26211e",
-    tabBar: "#3a3a28",
+    tabBar: "#3a3a28", // olive
     tabActive: "#ebded0",
-    tabInactive: "#a8957e",
+    tabInactive: "#a8968a",
   },
 };
 
